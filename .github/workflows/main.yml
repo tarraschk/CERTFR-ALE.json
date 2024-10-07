@@ -1,0 +1,37 @@
+name: Daily CVE Fetch
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Runs daily at midnight (UTC)
+
+jobs:
+  fetch-cve-alerts:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
+
+    - name: Run CVE Fetch Script
+      run: |
+        python main.py
+
+    - name: Commit and Push results
+      run: |
+        git config --global user.name "github-actions"
+        git config --global user.email "github-actions@users.noreply.github.com"
+        git add cert-fr-ale_with_cves.json
+        git commit -m "Update consolidated CVE alerts JSON"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
