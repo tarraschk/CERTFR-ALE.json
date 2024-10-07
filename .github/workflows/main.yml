@@ -3,6 +3,7 @@ name: Daily CVE Fetch
 on:
   schedule:
     - cron: "0 0 * * *"  # Runs daily at midnight (UTC)
+  workflow_dispatch: # Allows for manual triggering of the workflow
 
 jobs:
   fetch-cve-alerts:
