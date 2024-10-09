@@ -31,7 +31,6 @@ jobs:
       run: |
         git config --global user.name "github-actions"
         git config --global user.email "github-actions@users.noreply.github.com"
-        git add cert-fr-ale_with_cves.json
         git diff --quiet && git diff --staged --quiet || git add cert-fr-ale_with_cves.json
         git diff --staged --quiet || git commit -m "Update CERTFR-ALE feed with CVEs in JSON format"
         git push
