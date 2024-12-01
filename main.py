@@ -16,12 +16,21 @@ def fetch_alerts():
     return response.json()
 
 def fetch_alert_details(json_url):
-    time.sleep(5)
     base_url = "https://www.cert.ssi.gouv.fr"
     full_url = base_url + json_url
     logging.info(f"Fetching alert details from {full_url}")
-    response = requests.get(full_url)
-    response.raise_for_status()
+    retries = 3
+    for attempt in range(retries):
+        try:
+            response = requests.get(full_url)
+            response.raise_for_status()
+            break
+        except requests.RequestException as e:
+            logging.error(f"Attempt {attempt + 1} failed: {e}")
+            if attempt < retries - 1:
+                time.sleep(5*(attempt + 1))
+            else:
+                raise
     logging.info(f"Successfully fetched details for {json_url}")
     return response.json()
 
